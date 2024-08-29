@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>修改用户</h1>
+    <label for="username">用户名:</label>
+    <input type="text" id="username" /><br />
+    <label for="password">密码:</label>
+    <input type="text" id="password" /><br />
+
+    <button>提交</button>
+    <script>
+      //获取url参数方式一
+      // const url = location.href;
+      // const id = url.split('=')[1];
+
+      //获取url参数方式二,使用URLSearchParams对象
+      const id = new URLSearchParams(location.search).get('id');
+      console.log(id);
+      //填充数据
+      axios({
+        method: 'get',
+        url: 'http://localhost:3000/users/' + id,
+      }).then(function (res) {
+        document.querySelector('#username').value = res.data.username;
+        document.querySelector('#password').value = res.data.password;
+      });
+
+      //获取提交按钮，添加点击事件
+      document.querySelector('button').addEventListener('click', function () {
+        //获取用户名和密码
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+        //发送请求
+        axios({
+          method: 'put',
+          url: 'http://localhost:3000/users/' + id,
+          data: {
+            username: username,
+            password: password,
+          },  
+        }).then(function (res) {
+          //跳转到首页
+          location.href = './index.html';
+        });
+      });
+    </script>
+  </body>
+</html>

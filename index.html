@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 30px;
+      }
+      a {
+        text-decoration: none;
+      }
+
+      table,
+      th,
+      td {
+        margin-top: 20px;
+        border: 1px solid black;
+        border-spacing: 0;
+        border-collapse: collapse;
+        text-align: center;
+      }
+
+      th,
+      td {
+        padding: 5px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>用户列表</h1>
+    <a href="./add.html">添加用户</a>
+    <table>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>用户名</th>
+          <th>密码</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- <tr>
+          <td>1</td>
+          <td>张三</td>
+          <td>225</td>
+          <td><a href="">编辑</a><a href="">删除</a></td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>张三</td>
+          <td>225</td>
+          <td><a href="">编辑</a><a href="">删除</a></td>
+        </tr> -->
+      </tbody>
+    </table>
+    <script>
+      //获取tbody
+      const tbody = document.querySelector('tbody');
+      //发送axios请求
+      axios.get('http://localhost:3000/users').then(res => {
+        //获取所有用户的数组
+        var arr = res.data;
+        console.log(arr);
+        //将用户数组中的js转成tr的dom字符串，再拼接成一整个字符串，放到tbody中
+        tbody.innerHTML = arr
+          .map(item => {
+            return ` <tr>
+                        <td>${item.id}</td>
+                        <td>${item.username}</td>
+                        <td>${item.password}</td>
+                        <td><a href="./edit.html?id=${item.id}">编辑</a><a href="" onclick='deleteItem(${item.id})'>删除</a></td>
+                    </tr>`;
+          })
+          .join('');
+      });
+
+      //删除用户方法
+      function deleteItem(id) {
+        const flag = confirm('确定要删除吗？');
+        if (flag) {
+          axios.delete('http://localhost:3000/users/' + id).then(res => {
+            location.reload();
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
